@@ -105,7 +105,7 @@ struct Win95TabBar: View {
     var body: some View {
         HStack(spacing: 0) {
             Win95Tab(
-                title: "Actions",
+                title: "Report",
                 icon: "hand.tap.fill",
                 isSelected: selectedTab == 0
             ) {
@@ -117,7 +117,7 @@ struct Win95TabBar: View {
                 .frame(width: 1)
 
             Win95Tab(
-                title: "Radar",
+                title: "Feed",
                 icon: "chart.bar.fill",
                 isSelected: selectedTab == 1
             ) {

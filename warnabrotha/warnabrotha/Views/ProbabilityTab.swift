@@ -13,54 +13,6 @@ struct ProbabilityTab: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // Probability Meter Section
-                VStack(alignment: .leading, spacing: 12) {
-                    // Loading bar style meter
-                    Win95ProbabilityMeter(
-                        probability: viewModel.displayedProbability,
-                        color: viewModel.probabilityColor
-                    )
-
-                    // Risk level and refresh
-                    HStack {
-                        HStack(spacing: 6) {
-                            Text("Status:")
-                                .win95Font(size: 13)
-                                .foregroundColor(Win95Colors.textPrimary)
-
-                            Text(viewModel.riskLevelText)
-                                .win95Font(size: 13)
-                                .foregroundColor(riskTextColor)
-                        }
-
-                        Spacer()
-
-                        Button {
-                            Task { await viewModel.refresh() }
-                        } label: {
-                            HStack(spacing: 4) {
-                                Image(systemName: "arrow.clockwise")
-                                    .font(.system(size: 12))
-                                Text("Refresh")
-                                    .win95Font(size: 12)
-                            }
-                            .foregroundColor(Win95Colors.textPrimary)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Win95Colors.buttonFace)
-                            .beveledBorder(raised: true, width: 1)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                }
-                .padding(16)
-                .background(Win95Colors.windowBackground)
-
-                // Divider
-                Rectangle()
-                    .fill(Win95Colors.buttonShadow.opacity(0.5))
-                    .frame(height: 1)
-
                 // Location selector (if multiple lots)
                 if viewModel.parkingLots.count > 1 {
                     Win95LotSelector(
@@ -87,6 +39,23 @@ struct ProbabilityTab: View {
                             .win95Font(size: 14)
                             .foregroundColor(Win95Colors.textPrimary)
                         Spacer()
+
+                        Button {
+                            Task { await viewModel.refresh() }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "arrow.clockwise")
+                                    .font(.system(size: 12))
+                                Text("Refresh")
+                                    .win95Font(size: 12)
+                            }
+                            .foregroundColor(Win95Colors.textPrimary)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Win95Colors.buttonFace)
+                            .beveledBorder(raised: true, width: 1)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
 
                     // Feed content
@@ -122,16 +91,6 @@ struct ProbabilityTab: View {
         .background(Win95Colors.windowBackground)
         .refreshable {
             await viewModel.refresh()
-        }
-    }
-
-    private var riskTextColor: Color {
-        if viewModel.displayedProbability < 33 {
-            return Win95Colors.safeGreen
-        } else if viewModel.displayedProbability < 66 {
-            return Win95Colors.warningYellow
-        } else {
-            return Win95Colors.dangerRed
         }
     }
 }
@@ -271,17 +230,24 @@ struct Win95LotSelector: View {
 
 struct Win95EmptyFeed: View {
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 24))
-                .foregroundColor(Win95Colors.safeGreen)
+        VStack(spacing: 16) {
+            Image(systemName: "doc.text.magnifyingglass")
+                .font(.system(size: 48))
+                .foregroundColor(Win95Colors.textDisabled)
 
-            Text("No TAPS sightings today")
-                .win95Font(size: 13)
-                .foregroundColor(Win95Colors.textPrimary)
+            VStack(spacing: 6) {
+                Text("No Reports Today")
+                    .win95Font(size: 16)
+                    .foregroundColor(Win95Colors.textPrimary)
+
+                Text("No TAPS sightings have been reported in the past 24 hours. Check back later or report a sighting if you spot one!")
+                    .win95Font(size: 13)
+                    .foregroundColor(Win95Colors.textDisabled)
+                    .multilineTextAlignment(.center)
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
+        .frame(maxWidth: .infinity)
+        .padding(24)
         .background(Win95Colors.inputBackground)
         .beveledBorder(raised: false, width: 1)
     }
